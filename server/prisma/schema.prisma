@@ -1,0 +1,120 @@
+
+//  npx prisma migrate to migrate the database
+//  npx prisma studio to view the database
+//  npx prisma generate to generate the prisma client
+//  npx prisma db seed to seed the database
+//  npx prisma db push to push the database
+//  npx prisma db pull to pull the database
+//  npx prisma db reset to reset the database 
+
+// migrate for create only
+// npx prisma migrate dev --create-only
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// model Product {
+//   id        String  @id @default(cuid())
+//   name      String
+//   price     Int
+//   description String
+//   image  String
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
+
+// model User {
+//   id        String @id @default(cuid())
+//   username  String @db.VarChar(100)
+//   password  String @db.VarChar(100)
+//   name      String @db.VarChar(100)
+//   token     String? @db.VarChar(100)
+//   contacts Contact[]
+
+//   @@map("users")
+// }
+model Patient {
+  id        String @id @default(cuid())
+  username  String @db.VarChar(100)
+  name      String @db.VarChar(100)
+  gender    String @db.VarChar(10)
+  age       String @db.VarChar(10)
+  contacts Contact[]
+  treatments PatientTreatment[]
+
+  @@map("patient")
+}
+model Contact {
+  id        String    @id @default(cuid())
+  firstName String    @db.VarChar(100)
+  lastName  String?   @db.VarChar(100)
+  email     String?   @db.VarChar(100)
+  phone     String?   @db.VarChar(100)
+  patientId    String
+  patient      Patient      @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  addresses Address[]
+
+  @@map("contacts")
+  @@index([patientId])
+}
+
+model Address {
+  id         String  @id @default(cuid())
+  street     String  @db.VarChar(100)
+  city       String  @db.VarChar(100)
+  province   String  @db.VarChar(100)
+  country    String  @db.VarChar(100)
+  postalCode String  @db.VarChar(10)
+  contactId  String
+  contact    Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  @@map("addresses")
+  @@index([contactId])
+}
+
+model PatientTreatment {
+  id        String  @id @default(cuid())
+  cost          Decimal    @db.Decimal(10, 2)
+  patientId     String
+  patient       Patient    @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  treatmentId   String
+  treatments     Treatment  @relation(fields: [treatmentId], references: [id], onDelete: Cascade)
+  medicationsId String
+  medications   medications  @relation(fields: [medicationsId], references: [id], onDelete: Cascade)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@index([patientId])
+  @@index([treatmentId])
+  @@index([medicationsId])
+  @@map("patient_treatments")
+}
+
+model Treatment {
+  id        String  @id @default(cuid())
+  name      String  @db.VarChar(100)
+  description String  @db.VarChar(100)
+  cost      Decimal    @db.Decimal(10, 2)
+  patientTreatments PatientTreatment[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@map("treatments")
+}
+
+model medications {
+  id        String  @id @default(cuid())
+  name      String  @db.VarChar(100)
+  description String  @db.VarChar(100)
+  cost      Decimal    @db.Decimal(10, 2)
+  patientTreatments PatientTreatment[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@map("medications")
+}
