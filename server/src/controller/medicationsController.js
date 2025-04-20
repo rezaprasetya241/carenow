@@ -18,7 +18,6 @@ router.post("/", async (req, res, next) => {
       .status(201)
       .json({ data: result, message: "Medication created successfully" });
   } catch (error) {
-    console.log("error: ", error);
     next(error);
   }
 });

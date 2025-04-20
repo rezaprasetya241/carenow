@@ -19,7 +19,6 @@ router.post("/", async (req, res, next) => {
     const result = await treatmentService.createTreatment(req.body);
     return res.status(201).json({ data: result, message: "Treatment created" });
   } catch (error) {
-    console.log("error", error);
     next(error);
   }
 });

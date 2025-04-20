@@ -3,7 +3,32 @@ import { validate } from "../validation/validation.js";
 import { transactionValidation } from "../validation/transactionValidation.js";
 
 const getTransaction = async () => {
-  return prismaClient.PatientTreatment.findMany();
+  return prismaClient.PatientTreatment.findMany({
+    include: {
+      treatments: {
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          cost: true,
+        },
+      },
+      medications: {
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          cost: true,
+        },
+      },
+      patient: {
+        select: {
+          name: true,
+          username: true,
+        },
+      },
+    },
+  });
 };
 
 const createTransaction = async (request) => {

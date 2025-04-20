@@ -8,7 +8,6 @@ const getMedications = async () => {
 
 const createMedications = async (request) => {
   const medications = validate(medicationsValidation, request);
-  console.log("medications: ", medications);
   const countMedications = await prismaClient.medications.count({
     where: {
       name: medications.name,
