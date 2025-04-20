@@ -15,7 +15,7 @@ router.post("/", async (req, res, next) => {
   try {
     const result = await medicationsService.createMedications(req.body);
     return res
-      .status(200)
+      .status(201)
       .json({ data: result, message: "Medication created successfully" });
   } catch (error) {
     console.log("error: ", error);

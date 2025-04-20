@@ -1,14 +1,13 @@
 import express from "express";
-import patientService from "../services/patientService.js";
+import transactionService from "../services/transactionService.js";
 
 const router = express.Router();
 
-// GET /patient
 router.get("/", async (req, res, next) => {
   try {
-    const result = await patientService.getPatients();
+    const result = await transactionService.getTransaction();
     return res.status(200).json({
-      message: "Patient list",
+      message: "Transaction list",
       data: result,
     });
   } catch (error) {
@@ -16,12 +15,11 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-// POST /patient
 router.post("/", async (req, res, next) => {
   try {
-    const result = await patientService.createPatient(req.body);
+    const result = await transactionService.createTransaction(req.body);
     return res.status(201).json({
-      message: "Patient created",
+      message: "Transaction created",
       data: result,
     });
   } catch (error) {

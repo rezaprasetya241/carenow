@@ -19,7 +19,7 @@ router.post("/", async (req, res) => {
       image,
     },
   });
-  return res.status(200).send({
+  return res.status(201).send({
     data: product,
     message: "Product created successfully",
   });
